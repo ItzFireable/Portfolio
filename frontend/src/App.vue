@@ -32,12 +32,11 @@ onMounted(() => {
   <img src="/kimi_pngtuber_ver.png" class="banner" alt="Banner image" />
   <Title></Title>
   <div class="intro">
-    <h1>hey</h1>
-    <p>this is gonna have a bunch of info</p>
-    <p>and the boxes below is skillset info and what i can do</p>
-    <p>theres gonna be a larger space here methinks</p>
-    <p>so im just putting random empty text lines in here to fill it up</p>
-    <p>boo</p>
+    <h1>Hey!</h1>
+    <p>I'm <a class="display">Kimi</a>, also known as Fireable.</p>
+    <p>I'm a young developer from Finland, with years of experience in various programming languages and frameworks.</p>
+    <p>I primarily work in game development, focusing on creating engaging and immersive experiences.<br/>I also have a passion for web development and enjoy building interactive web applications.</p>
+    <p>Feel free to reach out to me, and check out my work below.</p>
   </div>
   <div class="group group-row">
     <Skills></Skills>
@@ -82,12 +81,14 @@ body {
 .intro {
   padding-left: 32px;
   padding-right: 32px;
+
+  margin-bottom: -16px;
 }
 
 .banner {
   position: absolute;
-  margin-left: calc(100% - 525px);
-  margin-top: 100px;
+  margin-left: calc(100% - 550px);
+  margin-top: 60px;
 
   width: 500px;
   height: 500px;
@@ -96,7 +97,7 @@ body {
 
 .blur {
   transform: scale(1.05);
-  margin-top: 120px;
+  margin-top: 70px;
   filter: blur(8px) brightness(0);
   opacity: 0.4;
 }
@@ -128,6 +129,13 @@ body {
 
 .group-row {
   flex-direction: row;
+}
+
+.display {
+  background: linear-gradient(180deg, #e21d69, #ff8a2b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
 }
 
 @media only screen and (max-width: 600px) {
