@@ -92,6 +92,7 @@ onMounted(() => {
   width: fit-content;
   height: auto;
 
+  margin-top: 16px;
   margin-right: 16px;
 
   display: flex;

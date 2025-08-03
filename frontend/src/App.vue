@@ -128,4 +128,10 @@ body {
 .group-row {
   flex-direction: row;
 }
+
+@media only screen and (max-width: 600px) {
+  .banner {
+    display: none;
+  }
+}
 </style>
