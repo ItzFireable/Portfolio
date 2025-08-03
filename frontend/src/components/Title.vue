@@ -1,0 +1,66 @@
+<script setup lang="ts">
+  defineProps<{  }>()
+</script>
+
+<template>
+  <div class="bar">
+    <div class="info">
+      <img src="/logo.png" class="icon" alt="Website icon" />
+      <p class="title">Fireable</p>
+    </div>
+    <p style="text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);">Portfolio</p>
+    <div class="social">
+      <a href="https://github.com/ItzFireable">
+        <i class="fa-brands fa-github"></i>
+      </a>
+      <a href="https://twitter.com/Fireable__">
+        <i class="fa-brands fa-twitter"></i>
+      </a>
+      <a href="https://discord.com/users/329152844261490689">
+        <i class="fa-brands fa-discord"></i>
+      </a>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+  .bar {
+    padding-left: 32px;
+    padding-right: 32px;
+    height: 96px;
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom:0px;
+  }
+  .title {
+    padding-left: 16px;
+    font-weight: 600;
+
+    text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  }
+  .icon {
+    border-radius: 100%;
+    width: 32px;
+  }
+  .info {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+  }
+  .social {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+  }
+  .social > a {
+    color: white;
+    font-size: 24px;
+    padding-left: 8px;
+    text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  }
+</style>
