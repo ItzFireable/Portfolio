@@ -46,3 +46,4 @@ jobs:
           ###### End of Repository/Build Configurations ######
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_API_BACKUP_URL: ${{ secrets.VITE_API_BACKUP_URL }}
