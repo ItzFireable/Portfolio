@@ -32,7 +32,7 @@ onMounted(() => {
   <img src="/kimi_pngtuber_ver.png" class="banner" alt="Banner image" />
   <Title></Title>
   <div class="intro">
-    <h1>Hey!</h1>
+    <h1>Hello!</h1>
     <p>I'm <a class="display">Kimi</a>, also known as Fireable.</p>
     <p>I'm a young developer from Finland, with years of experience in various programming languages and frameworks.</p>
     <p>I primarily work in game development, focusing on creating engaging and immersive experiences.<br/>I also have a passion for web development and enjoy building interactive web applications.</p>
