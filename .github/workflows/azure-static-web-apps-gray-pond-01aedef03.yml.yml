@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'frontend/**'
+      - 'azure-static-web-apps-gray-pond-01aedef03.yml.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
