@@ -31,7 +31,7 @@ onMounted(() => {
   <img src="/kimi_pngtuber_ver.png" class="banner" alt="Banner image" />
   <Title></Title>
   <div class="intro">
-    <h1>hi</h1>
+    <h1>hey</h1>
     <p>this is gonna have a bunch of info</p>
     <p>and the boxes below is skillset info and what i can do</p>
     <p>theres gonna be a larger space here methinks</p>

@@ -139,3 +139,5 @@ app.get('/spotify', async () => {
 
   return currentlyPlaying;
 });
+
+console.log("Server is running!");
