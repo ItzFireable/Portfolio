@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="base">
+  <div class="base" v-bind:style="{ display: playing ? 'flex' : 'none' }">
     <img v-bind:src="icon" class="icon">
     <i class="spotify-icon fa-brands fa-spotify"></i>
     </img>
