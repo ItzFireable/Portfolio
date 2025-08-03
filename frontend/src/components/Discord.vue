@@ -11,7 +11,7 @@ const user = ref("...");
 const id = ref("...");
 const pfp = ref("...");
 
-const color = ref("f23f43");
+const color = ref("82838b");
 
 let statusReferences = {
   "dnd": "Do not disturb",
