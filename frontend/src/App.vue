@@ -39,9 +39,9 @@ onMounted(() => {
     <p>boo</p>
   </div>
   <div class="group group-row">
-    <Discord></Discord>
-    <Spotify></Spotify>
     <Skills></Skills>
+    <Spotify></Spotify>
+    <Discord></Discord>
   </div>
   <div class="group projects">
     <ProjectBanner title="Untitled C++ based rhythm game" banner="urg.gif" direction="left"

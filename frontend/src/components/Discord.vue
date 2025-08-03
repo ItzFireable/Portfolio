@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-import type { APIUser } from 'discord-api-types/v9';
 
 const status = ref("offline");
 const statusVisible = ref("Offline");

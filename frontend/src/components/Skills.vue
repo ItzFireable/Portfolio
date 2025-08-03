@@ -25,8 +25,7 @@ defineProps<{}>()
   flex-direction: row;
 
   margin-top: 16px;
-  align-items: flex-end;
-  margin-left: auto;
+  margin-right: auto;
 }
 
 .flex-column {
@@ -41,7 +40,7 @@ defineProps<{}>()
   backdrop-filter: blur(8px);
 
   margin: 0;
-  margin-left: 16px;
+  margin-right: 16px;
 
   display: flex;
 
