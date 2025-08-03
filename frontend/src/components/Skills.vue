@@ -13,7 +13,7 @@ defineProps<{}>()
       <p class="fields">C#</p>
       <p class="fields">Lua</p>
       <p class="fields">Haxe</p>
-      <p class="fields">JavaScript + TypeScript</p>
+      <p class="fields">JS + TS</p>
     </div>
   </div>
 </template>

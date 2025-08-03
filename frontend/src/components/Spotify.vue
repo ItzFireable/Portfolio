@@ -16,9 +16,6 @@ let interval: any;
 
 const getSpotifyCurrentlyPlaying = async () => {
   const apiUrl = 'http://localhost:3000/spotify';
-  if (interval !== undefined) {
-    clearInterval(interval);
-  }
 
   axios.get(apiUrl)
     .then((response) => {
@@ -46,6 +43,9 @@ const getSpotifyCurrentlyPlaying = async () => {
           }
         }
 
+        if (interval != null) {
+          clearInterval(interval);
+        }
         interval = setInterval(incrementProgress, 1000); // Update every second
       } else {
         timestamp.value = null;
