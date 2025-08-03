@@ -21,7 +21,8 @@ let statusReferences = {
 }
 
 onMounted(() => {
-  const apiUrl = import.meta.env.VITE_API_URL + '/discord';
+  const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
+  const apiUrl = baseUrl +'/discord';
 
   axios.get(apiUrl)
     .then((response) => {

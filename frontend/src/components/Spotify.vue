@@ -15,7 +15,8 @@ const progress = ref(0);
 let interval: any;
 
 const getSpotifyCurrentlyPlaying = async () => {
-  const apiUrl = import.meta.env.VITE_API_URL + '/spotify';
+  const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
+  const apiUrl = baseUrl +'/spotify';
 
   axios.get(apiUrl)
     .then((response) => {
