@@ -21,7 +21,7 @@ let statusReferences = {
 }
 
 onMounted(() => {
-  const apiUrl = 'http://localhost:3000/discord';
+  const apiUrl = import.meta.env.VITE_API_URL + '/discord';
 
   axios.get(apiUrl)
     .then((response) => {

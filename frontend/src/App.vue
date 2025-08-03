@@ -11,7 +11,7 @@ const primary = ref("#c4217b");
 const secondary = ref("#6037a1");
 
 onMounted(() => {
-  const apiUrl = 'http://localhost:3000/discord';
+  const apiUrl = import.meta.env.VITE_API_URL +'/discord';
 
   axios.get(apiUrl)
     .then((response) => {
