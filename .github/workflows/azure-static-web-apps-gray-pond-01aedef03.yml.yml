@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'frontend/**'
-      - 'azure-static-web-apps-gray-pond-01aedef03.yml.yml'
+      - '.github/workflows/azure-static-web-apps-gray-pond-01aedef03.yml.yml'
   workflow_dispatch:   
 
 jobs:
