@@ -16,8 +16,6 @@ const timestamp = ref(0 as number | null);
 const progress_ms = ref(0);
 const progress = ref(0);
 
-let interval: any;
-
 const getSpotifyCurrentlyPlaying = async () => {
   const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
   const apiUrl = baseUrl + '/spotify';
@@ -34,6 +32,7 @@ const getSpotifyCurrentlyPlaying = async () => {
         progress_ms.value = response.data.progress_ms;
         progress.value = progress_ms.value / (timestamp.value as number) * 100;
 
+        let incrementInterval: any;
         function incrementProgress() {
           if (playing.value) {
             progress_ms.value += 1000;
@@ -43,7 +42,7 @@ const getSpotifyCurrentlyPlaying = async () => {
               progress_ms.value = timestamp.value as number;
               progress.value = 100;
 
-              clearInterval(interval);
+              clearInterval(incrementInterval);
               getSpotifyCurrentlyPlaying();
             }
 
@@ -55,10 +54,10 @@ const getSpotifyCurrentlyPlaying = async () => {
           }
         }
 
-        if (interval != null) {
-          clearInterval(interval);
+        if (incrementInterval != null) {
+          clearInterval(incrementInterval);
         }
-        interval = setInterval(incrementProgress, 1000); // Update every second
+        incrementInterval = setInterval(incrementProgress, 1000); // Update every second
       } else {
         timestamp.value = null;
         progress.value = 0;
