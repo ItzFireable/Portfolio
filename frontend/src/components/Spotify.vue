@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
+const loading = ref(true);
+
 const song = ref("");
 const artist = ref("");
 
@@ -16,10 +18,11 @@ let interval: any;
 
 const getSpotifyCurrentlyPlaying = async () => {
   const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
-  const apiUrl = baseUrl +'/spotify';
+  const apiUrl = baseUrl + '/spotify';
 
   axios.get(apiUrl)
     .then((response) => {
+      loading.value = false;
       playing.value = response.data.is_playing;
       song.value = response.data.item.name;
 
@@ -63,6 +66,7 @@ const getSpotifyCurrentlyPlaying = async () => {
     })
     .catch((error) => {
       console.error('Error fetching data:', error);
+      loading.value = true;
     });
 
   setInterval(getSpotifyCurrentlyPlaying, 30000); // Refresh every 30 seconds
@@ -74,7 +78,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="base" v-bind:style="{ display: playing ? 'flex' : 'none' }">
+  <div v-if="loading" class="base loading">
+    <div class="loader"></div>
+  </div>
+  <div v-if="!loading" class="base" v-bind:style="{ display: (playing || loading) ? 'flex' : 'none' }">
     <img v-bind:src="icon" class="icon">
     <i class="spotify-icon fa-brands fa-spotify"></i>
     </img>
@@ -118,6 +125,12 @@ onMounted(() => {
   overflow: hidden;
 
   padding: 12px;
+}
+
+.loading {
+  min-width: 0px;
+  width: fit-content;
+  justify-content: center;
 }
 
 .info {
@@ -175,5 +188,66 @@ onMounted(() => {
 
   border-radius: 110%;
   background-color: rgba(18, 18, 18, 1);
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  margin: 4px;
+  width: 46px;
+  height: 46px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  animation:
+    l20-1 0.8s infinite linear alternate,
+    l20-2 1.6s infinite linear;
+}
+
+@keyframes l20-1 {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%)
+  }
+
+  12.5% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%)
+  }
+
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%)
+  }
+
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  62.5% {
+    clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  75% {
+    clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  100% {
+    clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%)
+  }
+}
+
+@keyframes l20-2 {
+  0% {
+    transform: scaleY(1) rotate(0deg)
+  }
+
+  49.99% {
+    transform: scaleY(1) rotate(135deg)
+  }
+
+  50% {
+    transform: scaleY(-1) rotate(0deg)
+  }
+
+  100% {
+    transform: scaleY(-1) rotate(-135deg)
+  }
 }
 </style>

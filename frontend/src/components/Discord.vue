@@ -3,6 +3,8 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
+const loading = ref(true);
+
 const status = ref("offline");
 const statusVisible = ref("Offline");
 
@@ -26,6 +28,8 @@ onMounted(() => {
 
   axios.get(apiUrl)
     .then((response) => {
+      loading.value = false;
+
       const keyTyped = response.data.status as keyof typeof statusReferences;
       statusVisible.value = statusReferences[keyTyped];
       status.value = response.data.status;
@@ -40,12 +44,16 @@ onMounted(() => {
     })
     .catch((error) => {
       console.error('Error fetching data:', error);
+      loading.value = true;
     });
 })
 </script>
 
 <template>
-  <div class="base">
+  <div v-if="loading" class="base">
+    <div class="loader"></div>
+  </div>
+  <div v-if="!loading"class="base">
     <div class="icon relative rounded-full" style="border-radius: 50%">
       <svg width="80" height="80" viewBox="0 0 40 40" class="absolute block w-auto">
         <mask id="svg-mask-avatar-status-round-32" maskContentUnits="objectBoundingBox" viewBox="0 0 1 1">
@@ -146,5 +154,65 @@ onMounted(() => {
 .small-title {
   font-size: small;
   color: rgb(167, 167, 167)
+}
+
+.loader {
+  margin: 4px;
+  width: 46px;
+  height: 46px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  animation:
+    l20-1 0.8s infinite linear alternate,
+    l20-2 1.6s infinite linear;
+}
+
+@keyframes l20-1 {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%)
+  }
+
+  12.5% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%)
+  }
+
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%)
+  }
+
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  62.5% {
+    clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  75% {
+    clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  100% {
+    clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%)
+  }
+}
+
+@keyframes l20-2 {
+  0% {
+    transform: scaleY(1) rotate(0deg)
+  }
+
+  49.99% {
+    transform: scaleY(1) rotate(135deg)
+  }
+
+  50% {
+    transform: scaleY(-1) rotate(0deg)
+  }
+
+  100% {
+    transform: scaleY(-1) rotate(-135deg)
+  }
 }
 </style>
