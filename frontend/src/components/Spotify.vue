@@ -88,12 +88,11 @@ const getSpotifyCurrentlyPlaying = async () => {
 
       return;
     });
-
-  setInterval(getSpotifyCurrentlyPlaying, 30000); // Refresh every 30 seconds
 };
 
 onMounted(() => {
   getSpotifyCurrentlyPlaying();
+  setInterval(getSpotifyCurrentlyPlaying, 10000); // Refresh every 10 seconds
 })
 </script>
 
