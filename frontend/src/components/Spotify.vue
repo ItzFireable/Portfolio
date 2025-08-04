@@ -90,7 +90,7 @@ onMounted(() => {
 
 <style scoped>
 .base {
-  min-width: 100px;
+  min-width: 200px;
   width: fit-content;
   height: auto;
 
