@@ -4,6 +4,8 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const loading = ref(true);
+const retries = ref(0);
+const maxRetries = 2;
 
 const status = ref("offline");
 const statusVisible = ref("Offline");
@@ -22,9 +24,9 @@ let statusReferences = {
   "idle": "Idle"
 }
 
-onMounted(() => {
+const getDiscordData = async () => {
   const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
-  const apiUrl = baseUrl +'/discord';
+  const apiUrl = baseUrl + '/discord';
 
   axios.get(apiUrl)
     .then((response) => {
@@ -42,10 +44,25 @@ onMounted(() => {
 
       color.value = status.value == "dnd" ? "f23f43" : (status.value == "idle" ? "ca9654" : (status.value == "online" ? "43a25a" : "82838b"))
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
+    .catch(() => {
       loading.value = true;
+      if (retries.value < maxRetries) {
+        retries.value++;
+        setTimeout(() => {
+          getDiscordData();
+        }, 2000); // Retry after 2 seconds
+      } else {
+        loading.value = false;
+        display.value = "?";
+        user.value = "?";
+        statusVisible.value = "Offline";
+        status.value = "offline";
+      }
     });
+}
+
+onMounted(() => {
+  getDiscordData();
 })
 </script>
 
@@ -76,7 +93,7 @@ onMounted(() => {
           <circle fill="black" cx="0.5" cy="0.5" r="0.25"></circle>
         </mask>
         <foreignObject x="0" y="0" width="32" height="32" mask="url(#svg-mask-avatar-status-round-32)">
-          <img v-bind:src="'https://cdn.discordapp.com/avatars/' + id + '/' + pfp + '.png?size=512'"
+          <img v-bind:src="id != '...' ? ('https://cdn.discordapp.com/avatars/' + id + '/' + pfp + '.png?size=512') : '/bear.png'"
             class="avatar" />
         </foreignObject>
         <rect width="10" height="10" x="22" y="22" v-bind:fill="'#' + color" v-bind:mask="'url(#svg-mask-status-' + status + ')'"/>

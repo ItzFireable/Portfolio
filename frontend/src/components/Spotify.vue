@@ -3,6 +3,8 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const loading = ref(true);
+const retries = ref(0);
+const maxRetries = 2;
 
 const song = ref("");
 const artist = ref("");
@@ -44,6 +46,12 @@ const getSpotifyCurrentlyPlaying = async () => {
               clearInterval(interval);
               getSpotifyCurrentlyPlaying();
             }
+
+            // set progress bar width
+            const progressBar = document.querySelector('.progress') as HTMLElement;
+            if (progressBar) {
+              progressBar.style.width = `${progress.value}%`;
+            }
           }
         }
 
@@ -64,9 +72,21 @@ const getSpotifyCurrentlyPlaying = async () => {
         artist.value += artistData.name;
       });
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
+    .catch(() => {
       loading.value = true;
+      if (retries.value < maxRetries) {
+        retries.value++;
+        setTimeout(getSpotifyCurrentlyPlaying, 2000);
+      } else {
+        loading.value = false;
+        playing.value = false;
+
+        song.value = "Error fetching data";
+        artist.value = "";
+        icon.value = "/bear.png";
+      }
+
+      return;
     });
 
   setInterval(getSpotifyCurrentlyPlaying, 30000); // Refresh every 30 seconds
@@ -81,7 +101,7 @@ onMounted(() => {
   <div v-if="loading" class="base loading">
     <div class="loader"></div>
   </div>
-  <div v-if="!loading" class="base" v-bind:style="{ display: (playing || loading) ? 'flex' : 'none' }">
+  <div v-if="!loading" class="base">
     <img v-bind:src="icon" class="icon">
     <i class="spotify-icon fa-brands fa-spotify"></i>
     </img>
@@ -89,7 +109,7 @@ onMounted(() => {
       <p class="name">{{ song }}</p>
       <p class="small-title">{{ artist }}</p>
       <div class="timebar">
-        <div class="progress" :key="progress" v-bind:style="{ width: progress + '%' }"></div>
+        <div class="progress"></div>
       </div>
     </div>
   </div>

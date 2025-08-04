@@ -56,7 +56,7 @@ class DiscordData {
 
 const app = new Elysia()
   .use(cors())
-  //.use(rateLimit())
+  .use(rateLimit())
   .state('discord', new DiscordData())
   .get('/discord', ({ store: { discord } }) => {
     discord.data.user = currentDiscordData.user;
@@ -124,6 +124,7 @@ const getSpotifyCurrentlyPlaying = async () => {
   });
 
   if (!currentlyPlayingResponse.ok) {
+    console.log(currentlyPlayingResponse);
     return { error: "Failed to fetch currently playing track." };
   }
 
