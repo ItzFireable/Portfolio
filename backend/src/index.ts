@@ -1,5 +1,4 @@
 require('dotenv').config({ quiet: true });
-var fs = require('fs');
 
 import { Elysia, file } from "elysia";
 import { cors } from '@elysiajs/cors'
@@ -57,6 +56,7 @@ class DiscordData {
 const app = new Elysia()
   .use(cors())
   .use(rateLimit())
+  .use(swagger())
   .state('discord', new DiscordData())
   .get('/discord', ({ store: { discord } }) => {
     discord.data.user = currentDiscordData.user;
@@ -64,13 +64,13 @@ const app = new Elysia()
 
     return discord.data;
   })
-  .get('/det', () => {
-    // get a random image from the assets/det folder
-    let files = fs.readdirSync('./public/images');
-    let randomFile = files[Math.floor(Math.random() * files.length)];
-    console.log(`Serving random image: ${randomFile}`);
+  .get('/spotify', async () => {
+    const currentlyPlaying = await getSpotifyCurrentlyPlaying();
+    if (currentlyPlaying.error) {
+      return { error: currentlyPlaying.error };
+    }
 
-    return file(`./public/images/${randomFile}`);
+    return currentlyPlaying;
   })
   .onError(({ code }) => {
     if (code === 'NOT_FOUND') {
@@ -131,14 +131,5 @@ const getSpotifyCurrentlyPlaying = async () => {
   const currentlyPlayingData = await currentlyPlayingResponse.json();
   return currentlyPlayingData;
 };
-
-app.get('/spotify', async () => {
-  const currentlyPlaying = await getSpotifyCurrentlyPlaying();
-  if (currentlyPlaying.error) {
-    return { error: currentlyPlaying.error };
-  }
-
-  return currentlyPlaying;
-});
 
 console.log("Server is running!");
