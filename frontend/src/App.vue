@@ -24,6 +24,13 @@ onMounted(() => {
     .catch((error) => {
       console.error('Error fetching data:', error);
     });
+
+  // get the offset for the projects section and apply it to a variable
+  const projectsSection = document.querySelector('.projects');
+  if (projectsSection) {
+    const offset = projectsSection.getBoundingClientRect().top + window.scrollY;
+    document.documentElement.style.setProperty('--projects-offset', `${offset}px`);
+  }
 })
 </script>
 
@@ -83,28 +90,33 @@ body {
   padding-right: 32px;
 
   margin-bottom: -16px;
+  z-index: 1;
+  position: relative;
 }
 
 .banner {
   position: absolute;
   margin-left: calc(100% - 550px);
-  margin-top: 60px;
+  margin-top: calc(var(--projects-offset) - 445px);
 
   width: 500px;
   height: 500px;
   object-fit: cover;
+
+  z-index: 0;
 }
 
 .blur {
   transform: scale(1.05);
-  margin-top: 70px;
+  margin-top: calc(var(--projects-offset) - 435px);
   filter: blur(8px) brightness(0);
-  opacity: 0.4;
+  opacity: 0.25;
 }
 
 .intro>* {
   text-align: left;
-  text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
+  z-index: 2;
 }
 
 .footer>* {
@@ -138,9 +150,4 @@ body {
   font-weight: bold;
 }
 
-@media only screen and (max-width: 800px) {
-  .banner {
-    display: none;
-  }
-}
 </style>
