@@ -32,6 +32,11 @@ const getSpotifyCurrentlyPlaying = async () => {
         progress_ms.value = response.data.progress_ms;
         progress.value = progress_ms.value / (timestamp.value as number) * 100;
 
+        const progressBar = document.querySelector('.progress') as HTMLElement;
+        if (progressBar) {
+          progressBar.style.width = `${progress.value}%`;
+        }
+
         function incrementProgress() {
           if (playing.value) {
             progress_ms.value += 1000;
@@ -45,8 +50,6 @@ const getSpotifyCurrentlyPlaying = async () => {
               getSpotifyCurrentlyPlaying();
             }
 
-            // set progress bar width
-            const progressBar = document.querySelector('.progress') as HTMLElement;
             if (progressBar) {
               progressBar.style.width = `${progress.value}%`;
             }
