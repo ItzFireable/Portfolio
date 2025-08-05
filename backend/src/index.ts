@@ -126,7 +126,7 @@ class DiscordData {
 
 const app = new Elysia()
   .use(cors())
-  .use(rateLimit())
+  //.use(rateLimit())
   .use(swagger())
   .state('discord', new DiscordData())
   .state('spotify', new SpotifyData())
