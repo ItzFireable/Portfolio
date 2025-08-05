@@ -5,6 +5,8 @@ import { onMounted, ref } from 'vue';
 const loading = ref(true);
 const currentId = ref();
 
+const cachedSpotifyData: Record<string, any> = {};
+
 const song = ref("");
 const artist = ref("");
 
@@ -17,6 +19,68 @@ const progress = ref(0);
 
 let incrementInterval: any;
 let progressBar: HTMLElement | null = null;
+
+const setInformation = (response: Record<string, any>) => {
+  loading.value = false;
+  playing.value = response.is_playing;
+  song.value = response.item.name;
+
+  icon.value = response.item.album.images[0].url;
+  if (response.is_playing) {
+    timestamp.value = response.item.duration_ms;
+    progress_ms.value = response.progress_ms;
+    progress.value = progress_ms.value / (timestamp.value as number) * 100;
+
+    if (!progressBar) {
+      progressBar = document.querySelector('.progress') as HTMLElement;
+    }
+    if (progressBar) {
+      progressBar.style.width = `${progress.value}%`;
+    }
+
+    function incrementProgress() {
+      if (!timestamp.value) return; // If no timestamp, skip increment
+      if (!progressBar) {
+        progressBar = document.querySelector('.progress') as HTMLElement;
+      }
+
+      if (playing.value) {
+        progress_ms.value += 100;
+        progress.value = progress_ms.value / (timestamp.value as number) * 100;
+
+        if (progress_ms.value >= (timestamp.value as number)) {
+          progress_ms.value = timestamp.value as number;
+          progress.value = 100;
+
+          clearInterval(incrementInterval);
+          incrementInterval = null;
+
+          cachedSpotifyData.value = null; // Reset cached data
+          getSpotifyCurrentlyPlaying();
+        }
+
+        if (progressBar) {
+          progressBar.style.width = `${progress.value}%`;
+        }
+      }
+    }
+
+    if (incrementInterval == null) {
+      incrementInterval = setInterval(incrementProgress, 100); // Update every 100ms
+    }
+  } else {
+    timestamp.value = null;
+    progress.value = 0;
+  }
+
+  artist.value = "";
+  response.item.artists.forEach((artistData: { name: string }) => {
+    if (artist.value.length > 0) {
+      artist.value += ", ";
+    }
+    artist.value += artistData.name;
+  });
+};
 
 const getSpotifyCurrentlyPlaying = async () => {
   const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
@@ -35,70 +99,16 @@ const getSpotifyCurrentlyPlaying = async () => {
         return; // If the track is the same, skip update
       }
 
-      loading.value = false;
-      playing.value = response.data.is_playing;
-      song.value = response.data.item.name;
-
-
-
-      icon.value = response.data.item.album.images[0].url;
-      if (response.data.is_playing) {
-        timestamp.value = response.data.item.duration_ms;
-        progress_ms.value = response.data.progress_ms;
-        progress.value = progress_ms.value / (timestamp.value as number) * 100;
-
-        if (!progressBar) {
-          progressBar = document.querySelector('.progress') as HTMLElement;
-        }
-        if (progressBar) {
-          progressBar.style.width = `${progress.value}%`;
-        }
-
-        function incrementProgress() {
-          if (!timestamp.value) return; // If no timestamp, skip increment
-          if (!progressBar) {
-            progressBar = document.querySelector('.progress') as HTMLElement;
-          }
-
-          if (playing.value) {
-            progress_ms.value += 100;
-            progress.value = progress_ms.value / (timestamp.value as number) * 100;
-
-            if (progress_ms.value >= (timestamp.value as number)) {
-              progress_ms.value = timestamp.value as number;
-              progress.value = 100;
-
-              clearInterval(incrementInterval);
-              incrementInterval = null;
-
-              getSpotifyCurrentlyPlaying();
-            }
-
-            if (progressBar) {
-              progressBar.style.width = `${progress.value}%`;
-            }
-          }
-        }
-
-        if (incrementInterval == null) {
-          incrementInterval = setInterval(incrementProgress, 100); // Update every 100ms
-        }
-      } else {
-        timestamp.value = null;
-        progress.value = 0;
-      }
-
-      artist.value = "";
-      response.data.item.artists.forEach((artistData: { name: string }) => {
-        if (artist.value.length > 0) {
-          artist.value += ", ";
-        }
-        artist.value += artistData.name;
-      });
+      cachedSpotifyData.value = response.data;
+      setInformation(response.data);
     })
     .catch(() => {
       loading.value = false;
-      playing.value = false;
+      if (cachedSpotifyData.value) {
+        setInformation(cachedSpotifyData.value);
+      } else {
+        playing.value = false;
+      }
     });
 };
 

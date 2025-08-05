@@ -4,6 +4,7 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const loading = ref(true);
+const cachedDiscordData = ref<Record<string, any>>({});
 
 const status = ref("offline");
 const statusVisible = ref("Offline");
@@ -22,6 +23,21 @@ let statusReferences = {
   "idle": "Idle"
 }
 
+const setInformation = (response: Record<string, any>) => {
+  loading.value = false;
+  const keyTyped = response.status as keyof typeof statusReferences;
+  statusVisible.value = statusReferences[keyTyped];
+  status.value = response.status;
+
+  display.value = response.user.global_name;
+  user.value = response.user.username;
+
+  pfp.value = response.user.avatar;
+  id.value = response.user.id;
+
+  color.value = status.value == "dnd" ? "f23f43" : (status.value == "idle" ? "ca9654" : (status.value == "online" ? "43a25a" : "82838b"));
+}
+
 const getDiscordData = async () => {
   const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
   const apiUrl = baseUrl + '/discord';
@@ -29,28 +45,23 @@ const getDiscordData = async () => {
   axios.get(apiUrl)
     .then((response) => {
       loading.value = false;
+      cachedDiscordData.value = response.data;
 
-      const keyTyped = response.data.status as keyof typeof statusReferences;
-      statusVisible.value = statusReferences[keyTyped];
-      status.value = response.data.status;
-
-      display.value = response.data.user.global_name;
-      user.value = response.data.user.username;
-
-      pfp.value = response.data.user.avatar;
-      id.value = response.data.user.id;
-
-      color.value = status.value == "dnd" ? "f23f43" : (status.value == "idle" ? "ca9654" : (status.value == "online" ? "43a25a" : "82838b"))
+      setInformation(response.data);
     })
     .catch(() => {
       loading.value = false;
-      display.value = "";
+      if (cachedDiscordData.value) {
+        setInformation(cachedDiscordData.value);
+      } else {
+        display.value = "";
+      }
     });
 }
 
 onMounted(() => {
   getDiscordData();
-  setInterval(getDiscordData, 30000); // Refresh every 30 seconds
+  setInterval(getDiscordData, 1000); // Refresh every 1 second
 })
 </script>
 
