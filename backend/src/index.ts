@@ -49,11 +49,21 @@ let spotifyClientCallback = process.env.SPOTIFY_CLIENT_CALLBACK;
 let spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 let spotifyRefreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
 
+var lastSpotifyRefreshTick = 0;
+var lastTokenTick = 0;
+
+var spotifyAccessToken: string | null = null;
+var currentlyPlaying: any = null;
+
 if (!spotifyClientId || !spotifyClientCallback || !spotifyClientSecret || !spotifyRefreshToken) {
   console.error("Spotify client ID, callback, secret, or refresh token is not set in the environment variables.");
 }
 
 const getSpotifyAccessToken = async () => {
+  if (spotifyAccessToken && Date.now() - lastTokenTick < (3600000 / 4)) { // Return cached token if it's still valid (15 minutes)
+    return { access_token: spotifyAccessToken, refresh_token: spotifyRefreshToken };
+  }
+
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -67,7 +77,10 @@ const getSpotifyAccessToken = async () => {
   });
 
   const data = await response.json();
+  
   if (response.ok) {
+    spotifyAccessToken = data.access_token;
+    lastTokenTick = Date.now();
     return { access_token: data.access_token, refresh_token: data.refresh_token };
   } else {
     return { error: data.error || "Failed to get access token." };
@@ -81,10 +94,13 @@ const getSpotifyCurrentlyPlaying = async () => {
     return { error: accessTokenResponse.error };
   }
 
-  const accessToken = accessTokenResponse.access_token;
+  if (currentlyPlaying != null && Date.now() - lastSpotifyRefreshTick < 10000) {
+    return currentlyPlaying; // Return cached currently playing data if it's still valid (10 seconds)
+  }
+
   const currentlyPlayingResponse = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      'Authorization': `Bearer ${spotifyAccessToken}`
     }
   });
 
@@ -92,8 +108,12 @@ const getSpotifyCurrentlyPlaying = async () => {
     console.log(currentlyPlayingResponse);
     return { error: "Failed to fetch currently playing track." };
   }
-
+  
   const currentlyPlayingData = await currentlyPlayingResponse.json();
+
+  lastSpotifyRefreshTick = Date.now();
+  currentlyPlaying = currentlyPlayingData;
+
   return currentlyPlayingData;
 };
 
@@ -115,7 +135,6 @@ const app = new Elysia()
   .state('discord', new DiscordData())
   .get('/discord', ({ store: { discord } }) => {
     updateUser();
-
     if (currentDiscordData.user == null || currentDiscordData.status == null) {
       return { error: "Discord user data is not available." };
     }

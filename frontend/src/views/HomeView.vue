@@ -3,15 +3,30 @@ import ProjectBanner from '../components/ProjectBanner.vue'
 import Skills from '../components/Skills.vue'
 import Discord from '../components/Discord.vue'
 import Spotify from '../components/Spotify.vue'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+
+const projectsOffset = ref(0);
 
 onMounted(() => {
   // get the offset for the projects section and apply it to a variable
-  const projectsSection = document.querySelector('.projects');
-  if (projectsSection) {
-    const offset = projectsSection.getBoundingClientRect().top + window.scrollY;
-    document.documentElement.style.setProperty('--projects-offset', `${offset}px`);
+  function getProjectsOffset(): number {
+    const projectsSection = document.querySelector('.projects');
+    if (projectsSection) {
+      return projectsSection.getBoundingClientRect().top + window.scrollY;
+    }
+    return 0;
   }
+
+  projectsOffset.value = getProjectsOffset();
+  document.documentElement.style.setProperty('--projects-offset', `${projectsOffset.value}px`);
+
+  setInterval(() => {
+    let newOffset = getProjectsOffset();
+    if (newOffset === projectsOffset.value) return; // No change, skip update
+
+    projectsOffset.value = newOffset;
+    document.documentElement.style.setProperty('--projects-offset', `${projectsOffset.value}px`);
+  }, 100);
 })
 </script>
 
