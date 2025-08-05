@@ -11,10 +11,15 @@ import { Snowflake, RESTGetAPIUserResult, GatewayIntentBits, APIUser } from 'dis
 const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
 
-let currentDiscordData: { status: string, user: APIUser | null } = {
-  status: "offline",
-  user: null
-}
+let spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
+let spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+let spotifyRefreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
+
+var lastSpotifyTick = 0;
+var lastDiscordTick = 0;
+var lastTokenTick = 0;
+
+var spotifyAccessToken: string | null = null;
 
 const ALL_INTENTS = GatewayIntentBits.GuildPresences;
 const token = process.env.DISCORD_TOKEN
@@ -26,6 +31,15 @@ const manager = new WebSocketManager({
   rest,
 });
 
+let currentDiscordData: { status: string, user: APIUser | null } = {
+  status: "offline",
+  user: null
+}
+
+let currentSpotifyData: { data: any } = {
+  data: null
+};
+
 manager.on(WebSocketShardEvents.Dispatch, async (event: any) => {
   if (event == null || event.t != "PRESENCE_UPDATE") return;
   currentDiscordData.status = event.d.status;
@@ -34,29 +48,35 @@ manager.on(WebSocketShardEvents.Dispatch, async (event: any) => {
 const fetchUser = async (id: Snowflake): Promise<RESTGetAPIUserResult> =>
   rest.get(Routes.user(id)) as Promise<RESTGetAPIUserResult>
 
-var lastRefreshTick = 0;
 async function updateUser() {
-  if (Date.now() - lastRefreshTick < 30000) {
+  if (Date.now() - lastDiscordTick < 30000) {
     return; // Prevent frequent updates, only update every 30 seconds
   }
-
+  
   currentDiscordData.user = await fetchUser("329152844261490689");
-  lastRefreshTick = Date.now();
+  lastDiscordTick = Date.now();
 }
 
-let spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
-let spotifyClientCallback = process.env.SPOTIFY_CLIENT_CALLBACK;
-let spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-let spotifyRefreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
+async function updateSpotify() {
+  if (Date.now() - lastSpotifyTick < 1000) {
+    return; // Prevent frequent updates, only update every 1 second
+  }
 
-var lastSpotifyRefreshTick = 0;
-var lastTokenTick = 0;
+  await getSpotifyAccessToken();
+  const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+    headers: {
+      'Authorization': `Bearer ${spotifyAccessToken}`
+    }
+  });
 
-var spotifyAccessToken: string | null = null;
-var currentlyPlaying: any = null;
+  if (!response.ok) {
+    console.error("Failed to fetch Spotify currently playing track:", response.statusText);
+    return;
+  }
 
-if (!spotifyClientId || !spotifyClientCallback || !spotifyClientSecret || !spotifyRefreshToken) {
-  console.error("Spotify client ID, callback, secret, or refresh token is not set in the environment variables.");
+  const data = await response.json();
+  currentSpotifyData.data = data;
+  lastSpotifyTick = Date.now();
 }
 
 const getSpotifyAccessToken = async () => {
@@ -87,39 +107,15 @@ const getSpotifyAccessToken = async () => {
   }
 };
 
-const getSpotifyCurrentlyPlaying = async () => {
-  const accessTokenResponse = await getSpotifyAccessToken();
-  if (accessTokenResponse.error) {
-    console.error("Error getting Spotify access token:", accessTokenResponse.error);
-    return { error: accessTokenResponse.error };
-  }
-
-  if (currentlyPlaying != null && Date.now() - lastSpotifyRefreshTick < 10000) {
-    return currentlyPlaying; // Return cached currently playing data if it's still valid (10 seconds)
-  }
-
-  const currentlyPlayingResponse = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-    headers: {
-      'Authorization': `Bearer ${spotifyAccessToken}`
-    }
-  });
-
-  if (!currentlyPlayingResponse.ok) {
-    console.log(currentlyPlayingResponse);
-    return { error: "Failed to fetch currently playing track." };
-  }
-  
-  const currentlyPlayingData = await currentlyPlayingResponse.json();
-
-  lastSpotifyRefreshTick = Date.now();
-  currentlyPlaying = currentlyPlayingData;
-
-  return currentlyPlayingData;
-};
+await getSpotifyAccessToken();
 
 await updateUser();
-await getSpotifyAccessToken();
+await updateSpotify();
 await manager.connect();
+
+class SpotifyData {
+  constructor(public data: any = null) { }
+}
 
 class DiscordData {
   constructor(public data: { status: string, user: APIUser | null } = {
@@ -130,11 +126,12 @@ class DiscordData {
 
 const app = new Elysia()
   .use(cors())
-  //.use(rateLimit())
+  .use(rateLimit())
   .use(swagger())
   .state('discord', new DiscordData())
-  .get('/discord', ({ store: { discord } }) => {
-    updateUser();
+  .state('spotify', new SpotifyData())
+  .get('/discord', async ({ store: { discord } }) => {
+    await updateUser();
     if (currentDiscordData.user == null || currentDiscordData.status == null) {
       return { error: "Discord user data is not available." };
     }
@@ -144,16 +141,14 @@ const app = new Elysia()
 
     return discord.data;
   })
-  .get('/spotify', async () => {
-    const currentlyPlaying = await getSpotifyCurrentlyPlaying();
-    if (currentlyPlaying == null) {
-      return { error: "No track is currently playing." };
-    }
-    if (currentlyPlaying.error != null) {
-      return { error: currentlyPlaying.error };
+  .get('/spotify', async ({ store: { spotify } }) => {
+    await updateSpotify();
+    if (currentSpotifyData.data == null) {
+      return { error: "Spotify currently playing data is not available." };
     }
 
-    return currentlyPlaying;
+    spotify.data = currentSpotifyData.data;
+    return spotify.data;
   })
   .onError(({ code }) => {
     if (code === 'NOT_FOUND') {
