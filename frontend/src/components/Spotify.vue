@@ -3,6 +3,7 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const loading = ref(true);
+const currentId = ref();
 
 const song = ref("");
 const artist = ref("");
@@ -15,6 +16,7 @@ const progress_ms = ref(0);
 const progress = ref(0);
 
 let incrementInterval: any;
+let progressBar: HTMLElement | null = null;
 
 const getSpotifyCurrentlyPlaying = async () => {
   const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
@@ -22,9 +24,22 @@ const getSpotifyCurrentlyPlaying = async () => {
 
   axios.get(apiUrl)
     .then((response) => {
+      let isSameTrack = false;
+      if (response.data.item.id === currentId.value) {
+        isSameTrack = true;
+      }
+
+      if (!isSameTrack) {
+        currentId.value = response.data.item.id;
+      } else {
+        return; // If the track is the same, skip update
+      }
+
       loading.value = false;
       playing.value = response.data.is_playing;
       song.value = response.data.item.name;
+
+
 
       icon.value = response.data.item.album.images[0].url;
       if (response.data.is_playing) {
@@ -32,14 +47,21 @@ const getSpotifyCurrentlyPlaying = async () => {
         progress_ms.value = response.data.progress_ms;
         progress.value = progress_ms.value / (timestamp.value as number) * 100;
 
-        const progressBar = document.querySelector('.progress') as HTMLElement;
+        if (!progressBar) {
+          progressBar = document.querySelector('.progress') as HTMLElement;
+        }
         if (progressBar) {
           progressBar.style.width = `${progress.value}%`;
         }
 
         function incrementProgress() {
+          if (!timestamp.value) return; // If no timestamp, skip increment
+          if (!progressBar) {
+            progressBar = document.querySelector('.progress') as HTMLElement;
+          }
+
           if (playing.value) {
-            progress_ms.value += 1000;
+            progress_ms.value += 100;
             progress.value = progress_ms.value / (timestamp.value as number) * 100;
 
             if (progress_ms.value >= (timestamp.value as number)) {
@@ -47,6 +69,8 @@ const getSpotifyCurrentlyPlaying = async () => {
               progress.value = 100;
 
               clearInterval(incrementInterval);
+              incrementInterval = null;
+
               getSpotifyCurrentlyPlaying();
             }
 
@@ -56,10 +80,9 @@ const getSpotifyCurrentlyPlaying = async () => {
           }
         }
 
-        if (incrementInterval != null) {
-          clearInterval(incrementInterval);
+        if (incrementInterval == null) {
+          incrementInterval = setInterval(incrementProgress, 100); // Update every 100ms
         }
-        incrementInterval = setInterval(incrementProgress, 1000); // Update every second
       } else {
         timestamp.value = null;
         progress.value = 0;
@@ -81,7 +104,7 @@ const getSpotifyCurrentlyPlaying = async () => {
 
 onMounted(() => {
   getSpotifyCurrentlyPlaying();
-  setInterval(getSpotifyCurrentlyPlaying, 10000); // Refresh every 10 seconds
+  setInterval(getSpotifyCurrentlyPlaying, 1000); // Refresh every 10 seconds
 })
 </script>
 
