@@ -24,7 +24,8 @@ onMounted(() => {
     <h1>Hello!</h1>
     <p>I'm <a class="display">Kimi</a>, also known as Fireable.</p>
     <p>I'm a young developer from Finland, with years of experience in various programming languages and frameworks.</p>
-    <p>I primarily work in game development, focusing on creating engaging and immersive experiences.<br/>I also have a passion for web development and enjoy building interactive web applications.</p>
+    <p>I primarily work in game development, focusing on creating engaging and immersive experiences.<br />I also have a
+      passion for web development and enjoy building interactive web applications.</p>
     <p>Feel free to reach out to me, and check out my work below.</p>
   </div>
   <div class="group group-row">
@@ -52,7 +53,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .intro {
   padding-left: 32px;
   padding-right: 32px;
@@ -117,5 +117,4 @@ onMounted(() => {
   -webkit-text-fill-color: transparent;
   font-weight: bold;
 }
-
 </style>
