@@ -3,8 +3,6 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const loading = ref(true);
-const retries = ref(0);
-const maxRetries = 2;
 
 const song = ref("");
 const artist = ref("");
@@ -73,20 +71,8 @@ const getSpotifyCurrentlyPlaying = async () => {
       });
     })
     .catch(() => {
-      loading.value = true;
-      if (retries.value < maxRetries) {
-        retries.value++;
-        setTimeout(getSpotifyCurrentlyPlaying, 2000);
-      } else {
-        loading.value = false;
-        playing.value = false;
-
-        song.value = "Error fetching data";
-        artist.value = "";
-        icon.value = "/bear.png";
-      }
-
-      return;
+      loading.value = false;
+      playing.value = false;
     });
 };
 
@@ -100,7 +86,7 @@ onMounted(() => {
   <div v-if="loading" class="base loading">
     <div class="loader"></div>
   </div>
-  <div v-if="!loading" class="base">
+  <div v-if="!loading && playing" class="base">
     <img v-bind:src="icon" class="icon">
     <i class="spotify-icon fa-brands fa-spotify"></i>
     </img>

@@ -4,16 +4,14 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const loading = ref(true);
-const retries = ref(0);
-const maxRetries = 2;
 
 const status = ref("offline");
 const statusVisible = ref("Offline");
 
-const display = ref("...");
-const user = ref("...");
-const id = ref("...");
-const pfp = ref("...");
+const display = ref("");
+const user = ref("");
+const id = ref("");
+const pfp = ref("");
 
 const color = ref("82838b");
 
@@ -45,24 +43,14 @@ const getDiscordData = async () => {
       color.value = status.value == "dnd" ? "f23f43" : (status.value == "idle" ? "ca9654" : (status.value == "online" ? "43a25a" : "82838b"))
     })
     .catch(() => {
-      loading.value = true;
-      if (retries.value < maxRetries) {
-        retries.value++;
-        setTimeout(() => {
-          getDiscordData();
-        }, 2000); // Retry after 2 seconds
-      } else {
-        loading.value = false;
-        display.value = "?";
-        user.value = "?";
-        statusVisible.value = "Offline";
-        status.value = "offline";
-      }
+      loading.value = false;
+      display.value = "";
     });
 }
 
 onMounted(() => {
   getDiscordData();
+  setInterval(getDiscordData, 30000); // Refresh every 30 seconds
 })
 </script>
 
@@ -70,7 +58,7 @@ onMounted(() => {
   <div v-if="loading" class="base">
     <div class="loader"></div>
   </div>
-  <div v-if="!loading"class="base">
+  <div v-if="!loading && display != ''"class="base">
     <div class="icon relative rounded-full" style="border-radius: 50%">
       <svg width="80" height="80" viewBox="0 0 40 40" class="absolute block w-auto">
         <mask id="svg-mask-avatar-status-round-32" maskContentUnits="objectBoundingBox" viewBox="0 0 1 1">

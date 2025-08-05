@@ -34,13 +34,14 @@ manager.on(WebSocketShardEvents.Dispatch, async (event: any) => {
 const fetchUser = async (id: Snowflake): Promise<RESTGetAPIUserResult> =>
   rest.get(Routes.user(id)) as Promise<RESTGetAPIUserResult>
 
+var lastRefreshTick = 0;
 async function updateUser() {
-  currentDiscordData.user = await fetchUser("329152844261490689");
-  new Promise(resolve => {
-    setTimeout(function () { resolve(100) }, 300000);
-  }).then(updateUser);
+  if (Date.now() - lastRefreshTick < 30000) {
+    return; // Prevent frequent updates, only update every 30 seconds
+  }
 
-  return await fetchUser("329152844261490689");
+  currentDiscordData.user = await fetchUser("329152844261490689");
+  lastRefreshTick = Date.now();
 }
 
 let spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
@@ -113,9 +114,12 @@ const app = new Elysia()
   .use(swagger())
   .state('discord', new DiscordData())
   .get('/discord', ({ store: { discord } }) => {
+    updateUser();
+
     if (currentDiscordData.user == null || currentDiscordData.status == null) {
       return { error: "Discord user data is not available." };
     }
+
     discord.data.user = currentDiscordData.user;
     discord.data.status = currentDiscordData.status;
 
