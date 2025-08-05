@@ -36,6 +36,7 @@ defineProps<{ title: string, description: string, banner: string, link: string, 
   overflow: hidden;
   padding: 16px;
   padding-top: 0px;
+  padding-inline: 24px;
 }
 
 .project>* {

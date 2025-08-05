@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Title></Title>
+  <Title :routes="{ 'Home': '/' }"></Title>
   <component :is="currentView" />
   <div class="footer">
     <p>© 2025 Fireable, All rights reserved</p>
