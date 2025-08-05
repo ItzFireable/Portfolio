@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ProjectBanner from '../components/ProjectBanner.vue'
-import Title from '../components/Title.vue'
 import Skills from '../components/Skills.vue'
 import Discord from '../components/Discord.vue'
 import Spotify from '../components/Spotify.vue'
@@ -19,7 +18,6 @@ onMounted(() => {
 <template>
   <img src="/kimi_pngtuber_ver.png" class="banner blur" alt="Banner image" />
   <img src="/kimi_pngtuber_ver.png" class="banner" alt="Banner image" />
-  <Title></Title>
   <div class="intro">
     <h1>Hello!</h1>
     <p>I'm <a class="display">Kimi</a>, also known as Fireable.</p>
@@ -47,9 +45,6 @@ onMounted(() => {
       link_desc="View the mod on GameBanana" link="https://gamebanana.com/mods/290601"
       description="This is a mod made for an indie rhythm game Friday Night Funkin'. It features music from the Japanese musician Camellia / Cametek, which consists primarily of speedcore / hardcore genre. The project was made using a platform called Kade Engine, which was the popular tool at the time. I was the lead developer and main programmer of this project until update 2 in 2022, and left the team afterwards. It is currently being maintained by another team." />
   </div>
-  <div class="footer">
-    <p>© 2025 Fireable, All rights reserved</p>
-  </div>
 </template>
 
 <style scoped>
@@ -65,7 +60,7 @@ onMounted(() => {
 .banner {
   position: absolute;
   margin-left: calc(100% - 550px);
-  margin-top: calc(var(--projects-offset) - 445px);
+  margin-top: calc(var(--projects-offset) - 505px);
 
   width: 500px;
   height: 500px;
@@ -76,7 +71,7 @@ onMounted(() => {
 
 .blur {
   transform: scale(1.05);
-  margin-top: calc(var(--projects-offset) - 435px);
+  margin-top: calc(var(--projects-offset) - 495px);
   filter: blur(8px) brightness(0);
   opacity: 0.25;
 }
@@ -85,12 +80,6 @@ onMounted(() => {
   text-align: left;
   text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
   z-index: 2;
-}
-
-.footer>* {
-  text-align: center;
-  padding-bottom: 16px;
-  margin-bottom: 0;
 }
 
 .group {

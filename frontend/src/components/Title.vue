@@ -27,7 +27,8 @@
   .bar {
     padding-left: 32px;
     padding-right: 32px;
-    height: 96px;
+    padding-top: 16px;
+    height: 64px;
     display: flex;
 
     justify-content: space-between;

@@ -9,7 +9,7 @@
 .main {
     text-align: center;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 64px - 16px - 56px);
     display: flex;
     flex-direction: column;
     justify-content: center;

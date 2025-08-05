@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Title from './components/Title.vue'
 import { computed, onMounted, ref } from 'vue'
 import axios from 'axios'
 
@@ -39,7 +40,11 @@ onMounted(() => {
 </script>
 
 <template>
+  <Title></Title>
   <component :is="currentView" />
+  <div class="footer">
+    <p>© 2025 Fireable, All rights reserved</p>
+  </div>
 </template>
 
 <style>
@@ -52,6 +57,13 @@ body {
   background-blend-mode: multiply;
 
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: 100vw 100vh;
+
+  background-attachment: fixed;
+}
+.footer>* {
+  text-align: center;
+  padding-bottom: 16px;
+  margin-bottom: 0;
 }
 </style>
