@@ -113,6 +113,9 @@ const app = new Elysia()
   .use(swagger())
   .state('discord', new DiscordData())
   .get('/discord', ({ store: { discord } }) => {
+    if (currentDiscordData.user == null || currentDiscordData.status == null) {
+      return { error: "Discord user data is not available." };
+    }
     discord.data.user = currentDiscordData.user;
     discord.data.status = currentDiscordData.status;
 
@@ -120,7 +123,10 @@ const app = new Elysia()
   })
   .get('/spotify', async () => {
     const currentlyPlaying = await getSpotifyCurrentlyPlaying();
-    if (currentlyPlaying.error) {
+    if (currentlyPlaying == null) {
+      return { error: "No track is currently playing." };
+    }
+    if (currentlyPlaying.error != null) {
       return { error: currentlyPlaying.error };
     }
 
