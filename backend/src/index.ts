@@ -43,42 +43,6 @@ async function updateUser() {
   return await fetchUser("329152844261490689");
 }
 
-await updateUser();
-await manager.connect();
-
-class DiscordData {
-  constructor(public data: { status: string, user: APIUser | null } = {
-    status: currentDiscordData.status,
-    user: currentDiscordData.user
-  }) { }
-}
-
-const app = new Elysia()
-  .use(cors())
-  .use(rateLimit())
-  .use(swagger())
-  .state('discord', new DiscordData())
-  .get('/discord', ({ store: { discord } }) => {
-    discord.data.user = currentDiscordData.user;
-    discord.data.status = currentDiscordData.status;
-
-    return discord.data;
-  })
-  .get('/spotify', async () => {
-    const currentlyPlaying = await getSpotifyCurrentlyPlaying();
-    if (currentlyPlaying.error) {
-      return { error: currentlyPlaying.error };
-    }
-
-    return currentlyPlaying;
-  })
-  .onError(({ code }) => {
-    if (code === 'NOT_FOUND') {
-      return 'Route not found :('
-    }
-  })
-  .listen(3000);
-
 let spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 let spotifyClientCallback = process.env.SPOTIFY_CLIENT_CALLBACK;
 let spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -131,5 +95,42 @@ const getSpotifyCurrentlyPlaying = async () => {
   const currentlyPlayingData = await currentlyPlayingResponse.json();
   return currentlyPlayingData;
 };
+
+await updateUser();
+await getSpotifyAccessToken();
+await manager.connect();
+
+class DiscordData {
+  constructor(public data: { status: string, user: APIUser | null } = {
+    status: currentDiscordData.status,
+    user: currentDiscordData.user
+  }) { }
+}
+
+const app = new Elysia()
+  .use(cors())
+  .use(rateLimit())
+  .use(swagger())
+  .state('discord', new DiscordData())
+  .get('/discord', ({ store: { discord } }) => {
+    discord.data.user = currentDiscordData.user;
+    discord.data.status = currentDiscordData.status;
+
+    return discord.data;
+  })
+  .get('/spotify', async () => {
+    const currentlyPlaying = await getSpotifyCurrentlyPlaying();
+    if (currentlyPlaying.error) {
+      return { error: currentlyPlaying.error };
+    }
+
+    return currentlyPlaying;
+  })
+  .onError(({ code }) => {
+    if (code === 'NOT_FOUND') {
+      return 'Route not found :('
+    }
+  })
+  .listen(3000);
 
 console.log("Server is running!");
