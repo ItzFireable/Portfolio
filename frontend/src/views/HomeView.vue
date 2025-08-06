@@ -85,8 +85,7 @@ onMounted(() => {
   <div class="group projects">
     <ProjectBanner v-for="(project, index) in projects" :key="index" v-bind:title="project.title"
       v-bind:banner="project.banner" v-bind:direction="project.direction" v-bind:link_desc="project.link_desc"
-      v-bind:link="project.link" v-bind:description="project.description" v-bind:source_link="project.source_link"
-      v-bind:source_link_desc="project.source_link_desc"></ProjectBanner>
+      v-bind:link="project.link" v-bind:description="project.description"/>
   </div>
 </template>
 
