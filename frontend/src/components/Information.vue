@@ -19,6 +19,7 @@ onMounted(() => {
     <div class="info">
       <p class="name">{{ age }} years old</p>
       <p class="small-title">Non-binary (they/them)</p>
+      <p class="small-title"> i use arch btw <i class="devicon-archlinux-plain"></i></p>
     </div>
   </div>
 </template>

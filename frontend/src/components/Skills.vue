@@ -1,21 +1,22 @@
 <script setup lang="ts">
+import Skill from './Skill.vue'
 defineProps<{}>()
 </script>
 
 <template>
   <div class="base flex-column">
     <div class="base">
-      <p class="fields">Vite + Vue (Frontend)</p>
-      <p class="fields">Elysia (Backend)</p>
+      <Skill icon="vite" title="Vite + Vue (Frontend)" />
+      <Skill title="Elysia (Backend)" />
     </div>
     <div class="base">
-      <p class="fields">C / C++</p>
-      <p class="fields">C#</p>
-      <p class="fields">Lua</p>
-      <p class="fields">Haxe</p>
-      <p class="fields">JS + TS</p>
-      <p class="fields">Rust</p>
-      <p class="fields">Python</p>
+      <Skill icon="cplusplus" title="C++" />
+      <Skill icon="csharp" title="C#" />
+      <Skill icon="lua" title="Lua" />
+      <Skill icon="haxe" title="Haxe" />
+      <Skill icon="javascript" title="JS" />
+      <Skill icon="typescript" title="TS" />
+      <Skill icon="rust" title="Rust" />
     </div>
   </div>
 </template>

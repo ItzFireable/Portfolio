@@ -77,27 +77,35 @@ defineProps<{
 }
 
 .links {
+  width: fit-content;
   display: flex;
   flex-direction: row;
 }
 
 .links>a {
+  width: fit-content;
   color: white;
   padding-left: 16px;
   padding-right: 16px;
   font-weight: 500;
   text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
   text-decoration: none;
+
+  display: flex;
+  flex-direction: row;
 }
 
-.links>a:after {
-  content: "";
+.links>a>p {
+  margin: 0;
+}
+
+.links>a>p:after {
+  content: " ";
   float: left;
   background: white;
   width: 100%;
-  height: 3px;
-  margin-top: -16px;
-  border-radius: 3px;
+  height: 2px;
+  border-radius: 4px;
 
   transform: scaleX(0);
   transition: transform 0.05s ease-in-out;
@@ -105,7 +113,17 @@ defineProps<{
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
 }
 
-.links>a:hover:after {
+.links>a:after {
+  content: "/";
+  margin-left: 16px;
+  margin-right: -16px;
+}
+
+.links>a:last-child:after {
+  content: "";
+}
+
+.links>a>p:hover:after {
   transform: scaleX(1);
 }
 </style>
