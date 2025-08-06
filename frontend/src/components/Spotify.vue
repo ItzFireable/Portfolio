@@ -88,6 +88,14 @@ const getSpotifyCurrentlyPlaying = async () => {
 
   axios.get(apiUrl)
     .then((response) => {
+      if (response.data.error) {
+        console.error('Error fetching Spotify data:', response.data.error);
+        
+        loading.value = false;
+        playing.value = false;
+        return;
+      }
+
       let isSameTrack = false;
       if (response.data.item.id === currentId.value) {
         isSameTrack = true;

@@ -20,8 +20,6 @@ window.addEventListener('popstate', () => {
 })
 
 const currentView = computed(() => {
-  console.log('Current path:', (currentPath.value as string).slice(1))
-  console.log(routes)
   return routes[(currentPath.value as string).slice(1) || '/'] || NotFound
 })
 
