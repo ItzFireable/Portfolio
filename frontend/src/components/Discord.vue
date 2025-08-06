@@ -124,6 +124,8 @@ onMounted(() => {
   backdrop-filter: blur(8px);
 
   margin-top: 16px;
+  margin-left: 16px;
+  
   border-radius: 16px;
   box-shadow:
     0 1px 1px hsl(0deg 0% 0% / 0.2),

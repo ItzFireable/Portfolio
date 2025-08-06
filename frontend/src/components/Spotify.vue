@@ -149,7 +149,7 @@ onMounted(() => {
   height: auto;
 
   margin-top: 16px;
-  margin-right: 16px;
+  margin-left: 16px;
 
   display: flex;
   flex-direction: row;

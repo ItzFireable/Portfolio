@@ -131,11 +131,11 @@ onMounted(() => {
   margin-top: 16px;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   flex-wrap: wrap;
 
   align-items: flex-end;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .group-row {
