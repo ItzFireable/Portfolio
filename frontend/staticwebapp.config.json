@@ -7,6 +7,11 @@
       "route": "/",
       "serve": "/index.html",
       "statusCode": 200
+    },
+    {
+      "route": "/converter",
+      "serve": "/index.html",
+      "statusCode": 200
     }
   ],
   "navigationFallback": {

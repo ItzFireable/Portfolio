@@ -10,12 +10,18 @@ const routes: Record<string, any> = {
   '/': HomeView,
 }
 
+const routeNames: Record<string, string> = {
+  '/': 'Home',
+}
+
 const currentPath = ref(window.location.pathname)
 window.addEventListener('popstate', () => {
   currentPath.value = window.location.pathname
 })
 
 const currentView = computed(() => {
+  console.log('Current path:', (currentPath.value as string).slice(1))
+  console.log(routes)
   return routes[(currentPath.value as string).slice(1) || '/'] || NotFound
 })
 
@@ -40,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Title :routes="{ 'Home': '/' }"></Title>
+  <Title :routes="routeNames"></Title>
   <component :is="currentView" />
   <div class="footer">
     <p>© 2025 Fireable, All rights reserved</p>

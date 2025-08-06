@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ title: string, description: string, banner: string, link: string, link_desc: string, direction: string }>()
+defineProps<{ title: string, description: string, banner: string, link: string, link_desc: string, direction: string, source_link?: string, source_link_desc?: string }>()
 </script>
 
 <template>
@@ -7,7 +7,8 @@ defineProps<{ title: string, description: string, banner: string, link: string, 
     <img v-bind:src="'/' + banner" class="banner" alt="Project banner" />
     <h1 v-bind:class="'title text-' + direction">{{ title }}</h1>
     <p v-bind:class="'description text-' + direction">{{ description || "Placeholder" }}</p>
-    <a v-bind:href="'text-' + direction + ' ' + link" class="link">{{ link_desc || "Link" }}</a>
+    <a v-bind:href="link" class="link">{{ link_desc || "Link" }}</a>
+    <a v-if="source_link" v-bind:href="source_link" class="link source-link">{{ source_link_desc || "Source Code" }}</a>
   </div>
 </template>
 

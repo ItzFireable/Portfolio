@@ -9,11 +9,13 @@ defineProps<{}>()
       <p class="fields">Elysia (Backend)</p>
     </div>
     <div class="base">
-      <p class="fields">C++</p>
+      <p class="fields">C / C++</p>
       <p class="fields">C#</p>
       <p class="fields">Lua</p>
       <p class="fields">Haxe</p>
       <p class="fields">JS + TS</p>
+      <p class="fields">Rust</p>
+      <p class="fields">Python</p>
     </div>
   </div>
 </template>

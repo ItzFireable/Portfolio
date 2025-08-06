@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  routes: Record<string, string>
+  routes: Record<string, any>
 }>();
 </script>
 
@@ -11,7 +11,7 @@ defineProps<{
       <p class="title">Fireable</p>
     </div>
     <div class="links">
-      <a v-for="(link, name) in routes" :key="name" :href="link">
+      <a v-for="(name, link) in routes" :key="name" :href="link">
         <p>{{ name }}</p>
       </a>
     </div>
