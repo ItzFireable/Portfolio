@@ -45,8 +45,6 @@ const getDiscordData = async () => {
   axios.get(apiUrl)
     .then((response) => {
       if (response.data.error) {
-        console.error('Error fetching Discord data:', response.data.error);
-        
         loading.value = false;
         display.value = "";
         return;
