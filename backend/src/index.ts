@@ -130,10 +130,10 @@ const app = new Elysia()
   .use(swagger())
   .state('discord', new DiscordData())
   .state('spotify', new SpotifyData())
-  .get('/discord', async ({ store: { discord } }) => {
+  .get('/discord', async ({ set, status, store: { discord } }) => {
     await updateUser();
     if (currentDiscordData.user == null || currentDiscordData.status == null) {
-      return { error: "Discord user data is not available." };
+      return status(404, "Discord user data is not available.");
     }
 
     discord.data.user = currentDiscordData.user;
@@ -141,10 +141,10 @@ const app = new Elysia()
 
     return discord.data;
   })
-  .get('/spotify', async ({ store: { spotify } }) => {
+  .get('/spotify', async ({ set, status, store: { spotify } }) => {
     await updateSpotify();
     if (currentSpotifyData.data == null) {
-      return { error: "Spotify currently playing data is not available." };
+      return status(404, "Spotify data is not available.");
     }
 
     spotify.data = currentSpotifyData.data;
