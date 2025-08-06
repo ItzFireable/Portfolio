@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const age = ref(0);
