@@ -76,7 +76,7 @@ onMounted(() => {
       passion for web development and enjoy building interactive web applications.</p>
     <p>Feel free to reach out to me, and check out my work below.</p>
   </div>
-  <div class="group group-row">
+  <div class="group group-row group-reverse">
     <Skills></Skills>
     <Information></Information>
     <Spotify></Spotify>
@@ -131,7 +131,7 @@ onMounted(() => {
   margin-top: 16px;
 
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   flex-wrap: wrap;
 
   align-items: flex-end;
@@ -140,6 +140,10 @@ onMounted(() => {
 
 .group-row {
   flex-direction: row;
+}
+
+.group-reverse {
+  flex-direction: column-reverse;
 }
 
 .display {
