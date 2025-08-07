@@ -76,7 +76,7 @@ onMounted(() => {
       passion for web development and enjoy building interactive web applications.</p>
     <p>Feel free to reach out to me, and check out my work below.</p>
   </div>
-  <div class="group group-row group-reverse">
+  <div class="group group-row">
     <Skills></Skills>
     <Information></Information>
     <Spotify></Spotify>
@@ -140,10 +140,6 @@ onMounted(() => {
 
 .group-row {
   flex-direction: row;
-}
-
-.group-reverse {
-  flex-direction: row-reverse;
 }
 
 .display {
