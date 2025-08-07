@@ -143,7 +143,7 @@ onMounted(() => {
 }
 
 .group-reverse {
-  flex-direction: column-reverse;
+  flex-direction: row-reverse;
 }
 
 .display {
