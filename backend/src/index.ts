@@ -5,6 +5,8 @@ import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import { rateLimit } from 'elysia-rate-limit'
 
+import { tachiScrobblerPlugin } from './modules/tachi-lastfm/src/plugin'
+
 import { WebSocketManager, WebSocketShardEvents } from '@discordjs/ws';
 import { Snowflake, RESTGetAPIUserResult, GatewayIntentBits, APIUser } from 'discord-api-types/v9'
 
@@ -128,6 +130,20 @@ const app = new Elysia()
   .use(cors())
   //.use(rateLimit())
   .use(swagger())
+  .use(tachiScrobblerPlugin({
+    tachiClientId:     process.env.TACHI_CLIENT_ID!,
+    tachiClientSecret: process.env.TACHI_CLIENT_SECRET!,
+    tachiRedirectUri:  process.env.TACHI_REDIRECT_URI!,
+    tachiApiBaseUrl:   process.env.TACHI_API_BASE_URL ?? "https://kamai.tachi.ac/api/v1",
+    tachiWebBaseUrl:   process.env.TACHI_WEB_BASE_URL ?? "https://kamai.tachi.ac",
+
+    lastfmApiKey:      process.env.LASTFM_API_KEY!,
+    lastfmApiSecret:   process.env.LASTFM_API_SECRET!,
+    lastfmCallbackUrl: process.env.LASTFM_CALLBACK_URL!,
+
+    intervalMs:        process.env.SYNC_INTERVAL_MS ? Number(process.env.SYNC_INTERVAL_MS) : undefined,
+    storageFile:       process.env.SCROBBLER_STORAGE_FILE ?? ".scrobbler-users.json",
+  }))
   .state('discord', new DiscordData())
   .state('spotify', new SpotifyData())
   .get('/discord', async ({ store: { discord } }) => {

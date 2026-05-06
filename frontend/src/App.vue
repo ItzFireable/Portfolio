@@ -2,15 +2,18 @@
 import Title from './components/Title.vue'
 import { computed, ref } from 'vue'
 
+import Arcade from './views/Arcade.vue'
 import HomeView from './views/HomeView.vue'
 import NotFound from './views/NotFound.vue'
 
 const routes: Record<string, any> = {
   '/': HomeView,
+  'arcade': Arcade,
 }
 
 const routeNames: Record<string, string> = {
-  '/': 'Home'
+  '/': 'Home',
+  'arcade': 'Arcade',
 }
 
 const currentPath = ref(window.location.pathname)
@@ -19,6 +22,7 @@ window.addEventListener('popstate', () => {
 })
 
 const currentView = computed(() => {
+  console.log((currentPath.value as string).slice(1));
   return routes[(currentPath.value as string).slice(1) || '/'] || NotFound
 })
 </script>
