@@ -11,14 +11,13 @@
 
 <style scoped>
 .skill {
-  width: auto;
-  height: auto;
+  width: fit-content;
+  height: fit-content;
 
   background: rgba(18, 18, 18, 0.6);
   backdrop-filter: blur(8px);
 
   margin: 0;
-  margin-right: 16px;
 
   display: flex;
 

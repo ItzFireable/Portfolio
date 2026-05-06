@@ -126,4 +126,14 @@ defineProps<{
 .links>a>p:hover:after {
   transform: scaleX(1);
 }
+
+@media (max-width: 768px) {
+  .info {
+    display: none;
+  }
+
+  .links {
+    margin-left: -16px;
+  }
+}
 </style>

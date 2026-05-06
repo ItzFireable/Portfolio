@@ -22,7 +22,6 @@ window.addEventListener('popstate', () => {
 })
 
 const currentView = computed(() => {
-  console.log((currentPath.value as string).slice(1));
   return routes[(currentPath.value as string).slice(1) || '/'] || NotFound
 })
 </script>
@@ -31,7 +30,7 @@ const currentView = computed(() => {
   <Title :routes="routeNames"></Title>
   <component :is="currentView" />
   <div class="footer">
-    <p>© 2025 Fireable, All rights reserved</p>
+    <p>© 2026 Fireable, All rights reserved</p>
   </div>
 </template>
 

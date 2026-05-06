@@ -5,6 +5,7 @@ import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import { rateLimit } from 'elysia-rate-limit'
 
+import { tachiPlugin } from './modules/tachi/src/plugin'
 import { tachiScrobblerPlugin } from './modules/tachi-lastfm/src/plugin'
 
 import { WebSocketManager, WebSocketShardEvents } from '@discordjs/ws';
@@ -130,6 +131,10 @@ const app = new Elysia()
   .use(cors())
   //.use(rateLimit())
   .use(swagger())
+  .use(tachiPlugin({
+    tachiApiBaseUrl:   process.env.TACHI_API_BASE_URL ?? "https://kamai.tachi.ac/api/v1",
+    tachiApiToken:     process.env.TACHI_CLIENT_KEY!,
+  }))
   .use(tachiScrobblerPlugin({
     redirectUri:       process.env.REDIRECT_FINAL_URL!,
 

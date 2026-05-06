@@ -93,8 +93,7 @@ onMounted(() => {
 .intro {
   padding-left: 32px;
   padding-right: 32px;
-
-  margin-bottom: -16px;
+  
   z-index: 1;
   position: relative;
 }
@@ -147,5 +146,11 @@ onMounted(() => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    display: none;
+  }
 }
 </style>

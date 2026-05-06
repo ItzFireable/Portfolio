@@ -9,7 +9,7 @@ defineProps<{}>()
       <Skill icon="vite" title="Vite + Vue (Frontend)" />
       <Skill title="Elysia (Backend)" />
     </div>
-    <div class="base">
+    <div class="base wrap">
       <Skill icon="cplusplus" title="C++" />
       <Skill icon="csharp" title="C#" />
       <Skill icon="lua" title="Lua" />
@@ -25,10 +25,16 @@ defineProps<{}>()
 .base {
   height: fit-content;
   display: flex;
+  width: 100%;
   flex-direction: row;
 
-  margin-top: 16px;
   margin-right: auto;
+  column-gap: 8px;
+  row-gap: 16px;
+}
+
+.wrap {
+  flex-wrap: wrap; 
 }
 
 .flex-column {

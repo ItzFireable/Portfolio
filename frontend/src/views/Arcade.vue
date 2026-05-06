@@ -1,48 +1,45 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import ArcadeGame from '../components/ArcadeGame.vue'
+    import LastFM from '../components/LastFM.vue'
 
-    const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
+    import { onMounted, ref } from 'vue'
 
-    let urlParams = new URLSearchParams(window.location.search);
-    const uuid = ref(urlParams.get('uuid'));
-
-    const connectUrl = ref(baseUrl + "/scrobbler/connect/tachi");
-    const disconnectUrl = ref(baseUrl + "/scrobbler/disconnect?uuid=" + uuid.value);
+    const games = ref([
+      "chunithm:Single",
+      "maimai:Single",
+      "wacca:Single",
+      "ongeki:Single",
+      "jubeat:Single",
+      "sdvx:Single",
+    ])
 </script>
 
 <template>
-    <div class="main">
-        <div class="group projects">
-            <div v-if="uuid" class="box">
-                <a v-if="disconnectUrl" v-bind:href="disconnectUrl" class="connect-btn">
-                    <i class="fa-solid fa-link"></i>
-                    Disconnect
-                </a>
-            </div>
-            <div v-else class="box">
-                <a v-if="connectUrl" v-bind:href="connectUrl" class="connect-btn">
-                    <i class="fa-solid fa-link"></i>
-                    Login with Kamaitachi
-                </a>
-            </div>
-        </div>
+  <div class="main">
+    <div class="intro">
+      <p>I also play various different rhythm games, and got years of experience in them.<br />This page has information about my rhythm game experience, and has some additional, still functional projects for them.</p>
+      <p>If any of them stop working, feel free to hit up my Discord! I will try to keep them up.</p>
     </div>
+    <div class="group group-row">
+      <LastFM/>
+      <div class="game-grid">
+      <ArcadeGame v-for="(game, index) in games" :key="index" v-bind:target="game"/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
 .main {
-    text-align: center;
     width: 100%;
-    height: calc(100vh - 64px - 16px - 56px);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    min-height: calc(100vh - 64px - 16px - 72px);
 }
 
-.main>* {
-    padding: 0;
-    margin: 0;
+.intro {
+  padding-left: 32px;
+  padding-right: 32px;
+  z-index: 1;
+  position: relative;
 }
 
 .group {
@@ -55,58 +52,24 @@
   flex-direction: column;
   flex-wrap: wrap;
 
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  column-gap: 16px;
 }
 
-.box {
-width: auto;
-  height: auto;
-
-  background: rgba(18, 18, 18, 0.6);
-  backdrop-filter: blur(8px);
-
-  margin: 0;
-  margin-right: 16px;
-
+.group-row {
   display: flex;
-
-  border-radius: 16px;
-  box-shadow:
-    0 1px 1px hsl(0deg 0% 0% / 0.2),
-    0 2px 2px hsl(0deg 0% 0% / 0.2),
-    0 4px 4px hsl(0deg 0% 0% / 0.2),
-    0 8px 8px hsl(0deg 0% 0% / 0.2),
-    0 16px 16px hsl(0deg 0% 0% / 0.2);
-
-  justify-content: center;
-  align-items: center;
-
-  position: relative;
-  overflow: hidden;
-
-  padding: 12px;
-  text-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
 }
 
-.connect-btn:link {
-  color: lightgray;
-  text-decoration: none;
+.game-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  row-gap: 4px;
+  flex: 1;
 }
-
-.connect-btn:visited {
-  color: lightgray;
-  text-decoration: none;
-}
-
-.connect-btn:hover {
-  color: white;
-  text-decoration: none;
-}
-
-.connect-btn:active {
-  color: lightgray;
-  text-decoration: none;
-}
-
 </style>
