@@ -131,6 +131,8 @@ const app = new Elysia()
   //.use(rateLimit())
   .use(swagger())
   .use(tachiScrobblerPlugin({
+    redirectUri:       process.env.REDIRECT_FINAL_URL!,
+
     tachiClientId:     process.env.TACHI_CLIENT_ID!,
     tachiClientSecret: process.env.TACHI_CLIENT_SECRET!,
     tachiRedirectUri:  process.env.TACHI_REDIRECT_URI!,
