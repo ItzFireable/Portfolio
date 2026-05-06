@@ -2,7 +2,7 @@
     import ArcadeGame from '../components/ArcadeGame.vue'
     import LastFM from '../components/LastFM.vue'
 
-    import { onMounted, ref } from 'vue'
+    import { ref } from 'vue'
 
     const games = ref([
       "chunithm:Single",

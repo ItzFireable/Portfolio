@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ target: string }>()
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 const loading = ref(true);
 
 const gameName = ref("");
@@ -28,7 +28,7 @@ axios.get(apiUrl)
       loading.value = false;
       return;
     }
-    
+
     gameName.value = response.data.gameName;
     playcount.value = response.data.playCount;
     rating.value = response.data.rating;

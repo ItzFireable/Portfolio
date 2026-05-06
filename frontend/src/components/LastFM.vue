@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { ref } from 'vue';
 
-    const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
+  const baseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BACKUP_URL;
 
-    let urlParams = new URLSearchParams(window.location.search);
-    const uuid = ref(urlParams.get('uuid'));
+  let urlParams = new URLSearchParams(window.location.search);
+  const uuid = ref(urlParams.get('uuid'));
 
-    const connectUrl = ref(baseUrl + "/scrobbler/connect/tachi");
-    const disconnectUrl = ref(baseUrl + "/scrobbler/disconnect?uuid=" + uuid.value);
+  const connectUrl = ref(baseUrl + "/scrobbler/connect/tachi");
+  const disconnectUrl = ref(baseUrl + "/scrobbler/disconnect?uuid=" + uuid.value);
 </script>
 
 <template>
