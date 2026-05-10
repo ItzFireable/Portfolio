@@ -136,20 +136,22 @@ const app = new Elysia()
     tachiApiToken:     process.env.TACHI_CLIENT_KEY!,
   }))
   .use(tachiScrobblerPlugin({
-    redirectUri:       process.env.REDIRECT_FINAL_URL!,
+    redirectUri:          process.env.REDIRECT_FINAL_URL!,
 
-    tachiClientId:     process.env.TACHI_CLIENT_ID!,
-    tachiClientSecret: process.env.TACHI_CLIENT_SECRET!,
-    tachiRedirectUri:  process.env.TACHI_REDIRECT_URI!,
-    tachiApiBaseUrl:   process.env.TACHI_API_BASE_URL ?? "https://kamai.tachi.ac/api/v1",
-    tachiWebBaseUrl:   process.env.TACHI_WEB_BASE_URL ?? "https://kamai.tachi.ac",
+    tachiClientId:        process.env.TACHI_CLIENT_ID!,
+    tachiClientSecret:    process.env.TACHI_CLIENT_SECRET!,
+    tachiRedirectUri:     process.env.TACHI_REDIRECT_URI!,
+    tachiApiBaseUrl:      process.env.TACHI_API_BASE_URL ?? "https://kamai.tachi.ac/api/v1",
+    tachiWebBaseUrl:      process.env.TACHI_WEB_BASE_URL ?? "https://kamai.tachi.ac",
 
-    lastfmApiKey:      process.env.LASTFM_API_KEY!,
-    lastfmApiSecret:   process.env.LASTFM_API_SECRET!,
-    lastfmCallbackUrl: process.env.LASTFM_CALLBACK_URL!,
+    lastfmApiKey:         process.env.LASTFM_API_KEY!,
+    lastfmApiSecret:      process.env.LASTFM_API_SECRET!,
+    lastfmCallbackUrl:    process.env.LASTFM_CALLBACK_URL!,
 
-    intervalMs:        process.env.SYNC_INTERVAL_MS ? Number(process.env.SYNC_INTERVAL_MS) : undefined,
-    storageFile:       process.env.SCROBBLER_STORAGE_FILE ?? ".scrobbler-users.json",
+    intervalMs:           process.env.SYNC_INTERVAL_MS ? Number(process.env.SYNC_INTERVAL_MS) : undefined,
+
+    sqlConnectionString:  process.env.AZURE_SQL_CONNECTION_STRING,
+    storageFile:          process.env.SCROBBLER_STORAGE_FILE ?? ".scrobbler-users.json",
   }))
   .state('discord', new DiscordData())
   .state('spotify', new SpotifyData())
