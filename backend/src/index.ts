@@ -150,7 +150,9 @@ const app = new Elysia()
 
     intervalMs:           process.env.SYNC_INTERVAL_MS ? Number(process.env.SYNC_INTERVAL_MS) : undefined,
 
-    sqlConnectionString:  process.env.AZURE_SQL_CONNECTION_STRING,
+    blobConnectionString: process.env.AZURE_BLOB_CONNECTION_STRING,
+    blobContainerName:    process.env.AZURE_BLOB_CONTAINER_NAME,
+    blobName:             process.env.AZURE_BLOB_NAME,
     storageFile:          process.env.SCROBBLER_STORAGE_FILE ?? ".scrobbler-users.json",
   }))
   .state('discord', new DiscordData())
