@@ -5,12 +5,12 @@
     import { ref } from 'vue'
 
     const games = ref([
-      "chunithm:Single",
-      "maimai:Single",
-      "wacca:Single",
-      "ongeki:Single",
-      "jubeat:Single",
-      "sdvx:Single",
+      "chunithm",
+      "maimai",
+      "wacca",
+      "ongeki",
+      "jubeat",
+      "sdvx",
     ])
 </script>
 
