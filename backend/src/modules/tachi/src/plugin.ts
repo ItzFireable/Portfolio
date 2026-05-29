@@ -2,13 +2,11 @@ import Elysia from 'elysia';
 
 interface TachiGameConfig {
   name: string;
-  validPlaytypes: string[];
 }
 
 interface TachiUserGameStatsDocument {
   userID: number;
   game: string;
-  playtype: string;
   ratings: Record<string, number | null>;
   classes: Record<string, number | string | null>;
 }
@@ -35,7 +33,6 @@ interface TachiApiResponse<T> {
 
 export interface GameStats {
   game: string;
-  playtype: string;
   gameName: string;
   playCount: number;
   playtime: number;
@@ -67,23 +64,21 @@ export function tachiPlugin(config: TachiPluginConfig) {
 
   return new Elysia({ prefix: '/tachi' })
     .get('/game/:id', async ({ params: { id } }): Promise<GameStats> => {
-      const [game, playtype] = id.split(':');
-      if (!game || !playtype)
-        throw new Error(`Invalid game:playtype format — got "${id}"`);
+      if (!id)
+        throw new Error(`Invalid game format — got "${id}"`);
 
       const [statsBody, gamesBody] = await Promise.all([
-        tachiGet<TachiUserGameStatsBody>(`/users/me/games/${game}/${playtype}`),
+        tachiGet<TachiUserGameStatsBody>(`/users/me/games/${id}`),
         tachiGet<TachiGamesBody>('/games'),
       ]);
 
       const { gameStats, totalScores, rankingData } = statsBody;
-      const gameName = gamesBody.configs[game]?.name ?? game;
+      const gameName = gamesBody.configs[id]?.name ?? id;
       const defaultAlg = Object.keys(rankingData)[0];
       const rating = defaultAlg ? (gameStats.ratings[defaultAlg] ?? null) : null;
 
       return {
-        game,
-        playtype,
+        game: id,
         gameName,
         playCount: totalScores,
         playtime: statsBody.playtime,
@@ -99,14 +94,13 @@ export function tachiPlugin(config: TachiPluginConfig) {
       ]);
 
       return myGamesBody.map((gameStats) => {
-        const { game, playtype, ratings } = gameStats;
-        const id = `${game}:${playtype}`;
+        const { game, ratings } = gameStats;
+        const id = `${game}`;
         const gameName = allGamesBody.configs[game]?.name ?? game;
         const rating = Object.values(ratings)[0] ?? null;
 
         return {
           game,
-          playtype,
           gameName,
           playCount: 0,
           playtime: 0,
